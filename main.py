@@ -7,6 +7,36 @@ import numpy as np
 from ultralytics import YOLO
 import math
 
+
+def render_Image (type):
+
+
+    if type == 0:
+        img = cv2.imread('setUp/infgeneral.png')
+        lblimg.place(x=75, y=260)
+
+    elif type == 1:
+        img = cv2.imread('setUp/pernos.png')
+        lblimg.place(x=995,y=150)
+
+    elif type == 2:
+        img = cv2.imread('setUp/liners.png')
+        lblimg.place(x=995, y=400)
+
+    else:
+        img4 = cv2.imread('setUp/tabla.png')
+
+    img = np.array(img, dtype='uint8')
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = Image.fromarray(img)
+
+    img_ = ImageTk.PhotoImage(image=img)
+    lblimg.configure(image=img_)
+    lblimg.image = img_
+
+
+
+
 #Scanning Function
 def Scanning():
 
@@ -35,49 +65,57 @@ def Scanning():
                     cls= int(box.cls[0])
 
                     #Confidence
-                    conf= math.ceil(box.conf[0])
+                    conf = box.conf[0]
+                    CONFIDENCE_THRESHOLD = 0.90
+                    print(f"Clase: {cls}, Confianza: {conf}")
 
-                    if conf > 0.5:
+                    if conf > CONFIDENCE_THRESHOLD:
                         if cls == 0:
                             #Draw Rectangulo
                             cv2.rectangle(frame_show, (x1,y1), (x2,y2), (255,255,0),2)
 
                             #text
-                            text = f'{clsName[cls]} {int(conf) * 100}%'
+                            text = f'{clsName[cls]} {int(conf * 100)}%'
                             sizetext = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX,1 ,2)
                             dim = sizetext[0]
                             baseline = sizetext[1]
                             #Rect
                             cv2.rectangle(frame_show, (x1,y1 - dim[1] - baseline), (x1 + dim[0], y1 + baseline), (0,0,0), cv2.FILLED)
                             cv2.putText(frame_show, text, (x1,y1 -5), cv2.FONT_HERSHEY_SIMPLEX,1, (255,0,0),2)
+                            render_Image(cls)
 
-                    if cls == 1:
-                        # Draw Rectangulo
-                        cv2.rectangle(frame_show, (x1, y1), (x2, y2), (255, 255, 0), 2)
 
-                        # text
-                        text = f'{clsName[cls]} {int(conf) * 100}%'
-                        sizetext = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
-                        dim = sizetext[0]
-                        baseline = sizetext[1]
-                        # Rect
-                        cv2.rectangle(frame_show, (x1, y1 - dim[1] - baseline), (x1 + dim[0], y1 + baseline), (0, 0, 0),
-                                      cv2.FILLED)
-                        cv2.putText(frame_show, text, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 128, 0), 2)
+                        elif cls == 1:
+                            # Draw Rectangulo
+                            cv2.rectangle(frame_show, (x1, y1), (x2, y2), (255, 255, 0), 2)
 
-                    if cls == 2:
-                        # Draw Rectangulo
-                        cv2.rectangle(frame_show, (x1, y1), (x2, y2), (255, 255, 0), 2)
+                            # text
+                            text = f'{clsName[cls]} {int(conf * 100)}%'
+                            sizetext = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                            dim = sizetext[0]
+                            baseline = sizetext[1]
+                            # Rect
+                            cv2.rectangle(frame_show, (x1, y1 - dim[1] - baseline), (x1 + dim[0], y1 + baseline), (0, 0, 0),
+                                          cv2.FILLED)
+                            cv2.putText(frame_show, text, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 128, 0), 2)
+                            render_Image(cls)
 
-                        # text
-                        text = f'{clsName[cls]} {int(conf) * 100}%'
-                        sizetext = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
-                        dim = sizetext[0]
-                        baseline = sizetext[1]
-                        # Rect
-                        cv2.rectangle(frame_show, (x1, y1 - dim[1] - baseline), (x1 + dim[0], y1 + baseline), (0, 0, 0),
-                                      cv2.FILLED)
-                        cv2.putText(frame_show, text, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                        elif cls == 2:
+                            # Draw Rectangulo
+                            cv2.rectangle(frame_show, (x1, y1), (x2, y2), (255, 255, 0), 2)
+
+                            # text
+                            text = f'{clsName[cls]} {int(conf * 100)}%'
+                            sizetext = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                            dim = sizetext[0]
+                            baseline = sizetext[1]
+                            # Rect
+                            cv2.rectangle(frame_show, (x1, y1 - dim[1] - baseline), (x1 + dim[0], y1 + baseline), (0, 0, 0),
+                                          cv2.FILLED)
+                            cv2.putText(frame_show, text, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                            render_Image(cls)
+                        #else:
+                            #lblimg.config(image='')
 
 
             #Resize
@@ -96,14 +134,14 @@ def Scanning():
 
 #main
 def ventana_principal():
-    global model , clsName, img_generaltxt, img_linerstxt, img_pernostxt, cap, lblVideo
+    global model , clsName, img_generaltxt, img_linerstxt, img_pernostxt, cap, lblVideo, pantalla, lblimg
     # Ventana principal
     pantalla = Tk()
     pantalla.title("MOLINO SAG")
-    pantalla.geometry("1280x720")
-
+    pantalla.geometry("1281x721")
+    lblimg = Label(pantalla)
     #background
-    imagenF = PhotoImage(file="setUp/Ventana.png")
+    imagenF = PhotoImage(file="setUp/Ventanaprinc.png")
     background = Label(image=imagenF)
     background.place(x=0, y=0, relwidth=1, relheight=1)
 
@@ -114,9 +152,9 @@ def ventana_principal():
     clsName = ['MOLINOSAG', 'PERNOS' , 'LINERS']
 
     #Img
-    img_generaltxt = cv2.imread('setUp/general.png')
-    img_linerstxt = cv2.imread('setUp/liners.PNG')
-    img_pernostxt = cv2.imread('setUp/pernos.png')
+    #img_generaltxt = cv2.imread('setUp/general.png')
+    #img_linerstxt = cv2.imread('setUp/liners.PNG')
+    #img_pernostxt = cv2.imread('setUp/pernos.png')
 
     # Label Video
     lblVideo = Label(pantalla)
