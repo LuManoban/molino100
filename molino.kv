@@ -1,0 +1,51 @@
+<Window>:
+    canvas.before:
+        Color:
+            rgba: rgba('#00a73d')
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+BoxLayout:
+    orientation: 'vertical'
+
+    # Título en la parte superior con fondo verde claro
+    BoxLayout:
+        size_hint_y: None
+        height: '50dp'
+        canvas.before:
+            Color:
+                rgba: rgba('#00a73d')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        Label:
+            text: 'MOLINO SAG'
+            font_size: '24sp'
+            bold: True
+
+    # Camera Display in the center
+    Image:
+        id: video_display
+        size_hint_y: 0.7
+
+    # Side display for detected classes with a light green background
+    BoxLayout:
+        size_hint_y: 0.3
+        orientation: 'horizontal'
+        canvas.before:
+            Color:
+                rgba: rgba('#00a73d')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        Image:
+            id: detected_class_display_1
+            source: 'setUp/infgeneral.png'
+        Image:
+            id: detected_class_display_2
+            source: 'setUp/pernos.png'
+        Image:
+            id: detected_class_display_3
+            source: 'setUp/liners.png'
