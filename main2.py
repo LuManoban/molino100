@@ -10,7 +10,7 @@ import numpy as np
 class MolinoApp(App):
 
     def build(self):
-        self.capture = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.capture = cv2.VideoCapture(1, cv2.CAP_DSHOW)
         self.capture.set(3, 640)
         self.capture.set(4, 480)
         self.model = YOLO('Modelos/molinosag.pt')
